@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Score & Name Tracker</title>
+</head>
+
+<body onload="initializePage()">
+  
+  <p>Welcome, <span id="username"></span>!</p>
+  <p>Score => <span id="s"></span></p>
+  <button onclick="Click()">PRESS</button>
+  <script>
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+      let name = cname + "=";
+      let ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    function initializePage() {
+      // Check for user's name
+      let user = getCookie("username");
+      if (user != "") {
+        document.getElementById("username").innerHTML = user;
+      } else {
+        user = prompt("Please enter your name:", "");
+        if (user != "" && user != null) {
+          setCookie("username", user, 365);
+          document.getElementById("username").innerHTML = user;
+        }
+      }
+
+      // Load score from cookie
+      let savedScore = getCookie("score");
+      if (savedScore != "") {
+        score = parseInt(savedScore); // Convert to integer
+      } else {
+        score = 0; // Default score
+      }
+      document.getElementById("s").innerHTML = score; // Display the score
+    }
+
+    let score = 0;
+    function Click() { 
+      score += 1;
+      document.getElementById("s").innerHTML = score; // Update the displayed score
+      setCookie("score", score, 365); // Save the score in a cookie
+    }
+  </script>
+</body>
+
