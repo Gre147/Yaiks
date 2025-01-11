@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Notifications</title>
+</head>
+
+<body>
+  <h1>Notification Example</h1>
+  <button onclick="showNotification()">Show Notification</button>
+
+  <script>
+    // Step 1: Request permission to show notifications
+    function requestNotificationPermission() {
+      if ("Notification" in window) {
+        Notification.requestPermission()
+          .then(permission => {
+            if (permission === "granted") {
+              console.log("Notification permission granted.");
+            } else if (permission === "denied") {
+              console.log("Notification permission denied.");
+            } else {
+              console.log("Notification permission dismissed.");
+            }
+          })
+          .catch(err => console.error("Error requesting permission:", err));
+      } else {
+        alert("Your browser does not support notifications.");
+      }
+    }
+
+    // Step 2: Show the notification
+    function showNotification() {
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          const options = {
+            body: "This is the body of the notification.",
+            icon: "https://via.placeholder.com/150", // Replace with your own icon URL
+            tag: "example-notification" // Prevents duplicate notifications
+          };
+
+          try {
+            const notification = new Notification("Hello from JavaScript!", options);
+
+            // Step 3: Add event listeners
+            notification.onclick = () => {
+              console.log("Notification clicked!");
+              window.focus(); // Bring the tab to focus
+            };
+
+            notification.onclose = () => {
+              console.log("Notification closed.");
+            };
+          } catch (err) {
+            console.error("Error showing notification:", err);
+          }
+        } else {
+          alert("Please allow notifications to view this.");
+        }
+      } else {
+        alert("Your browser does not support notifications.");
+      }
+    }
+
+    // Request permission on page load
+    requestNotificationPermission();
+  </script>
+</body>
+
+</html>
